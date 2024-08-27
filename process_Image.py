@@ -53,7 +53,8 @@ SWINV2_MODEL_DSV3_REPO = "SmilingWolf/wd-swinv2-tagger-v3"
 def main():
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
-    input_folder = os.path.join(current_dir, 'dataset')
+    input_folder = "D:\\PhotosAndVideos\\Datasets\\GalagenShit"
+    #input_folder = os.path.join(current_dir, 'dataset')
     output_folder = os.path.join(current_dir, 'output')
     general_thresh = 0.5
     character_thresh = 0.5

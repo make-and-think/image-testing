@@ -6,7 +6,6 @@ from PIL import Image
 from huggingface_hub import hf_hub_download
 import os
 import shutil
-import tempfile
 import io
 
 # Dataset v3 series of models:
@@ -105,12 +104,18 @@ class Interrogator:
         self.general_indexes = sep_tags[2]
         self.character_indexes = sep_tags[3]
 
-        model = rt.InferenceSession(model_path)
-        _, height, width, _ = model.get_inputs()[0].shape
+        # gpu doesnt't work :(
+        available_providers = rt.get_available_providers()
+        if 'CUDAExecutionProvider' in available_providers:
+            providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']  # CUDA + CPU fallback
+        else:
+            providers = ['CPUExecutionProvider']
+
+        self.model = rt.InferenceSession(model_path, providers=providers)
+        _, height, width, _ = self.model.get_inputs()[0].shape
         self.model_target_size = height
 
         self.last_loaded_repo = model_repo
-        self.model = model
 
     def prepare_image(self, image_input):
         if isinstance(image_input, str):
